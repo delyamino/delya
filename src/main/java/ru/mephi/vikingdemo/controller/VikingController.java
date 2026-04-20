@@ -11,7 +11,12 @@ import ru.mephi.vikingdemo.model.Viking;
 import ru.mephi.vikingdemo.service.VikingService;
 
 import java.util.List;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import ru.mephi.vikingdemo.model.VikingNoId;
 
 @RestController
 @RequestMapping("/api/vikings")
@@ -51,5 +56,20 @@ public class VikingController {
     @PostMapping("/post")
     public void addViking(){
         vikingListener.testAdd();
+    }
+    
+    @PostMapping("/postCustomViking")
+    public void addCustomViking(@RequestBody Viking viking) {
+        vikingListener.customAdd(viking);
+    }
+    
+    @DeleteMapping("/{id}")
+    public void deleteViking(@PathVariable long id) {
+        vikingListener.deleteViking(id);
+    }
+        
+    @PutMapping("/{id}")
+    public void updateViking(@PathVariable long id, @RequestBody VikingNoId updated) {
+        vikingListener.updateViking(id, updated);
     }
 }

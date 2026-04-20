@@ -10,6 +10,7 @@ import ru.mephi.vikingdemo.model.EquipmentItem;
 import ru.mephi.vikingdemo.model.HairColor;
 import ru.mephi.vikingdemo.model.Viking;
 import java.util.Locale;
+import java.util.UUID;
 
 @Component
 public class VikingFactory {
@@ -19,6 +20,7 @@ public class VikingFactory {
 
     public Viking createRandomViking() {
         return new Viking(
+                Math.abs(new Random().nextLong()),
                 faker.name().firstName(),
                 18 + random.nextInt(43),
                 160 + random.nextInt(41),
@@ -26,6 +28,10 @@ public class VikingFactory {
                 BeardStyle.values()[random.nextInt(BeardStyle.values().length)],
                 createRandomEquipment()
         );
+    }
+    
+    public Viking createCustomViking(String name, int age, int height, HairColor hairColor, BeardStyle beardStyle, List<EquipmentItem> equipment) {
+        return new Viking (Math.abs(new Random().nextLong()), name, age, height, hairColor, beardStyle, equipment);
     }
 
     private List<EquipmentItem> createRandomEquipment() {
