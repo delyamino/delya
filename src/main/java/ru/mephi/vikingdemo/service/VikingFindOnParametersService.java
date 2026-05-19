@@ -73,7 +73,7 @@ public class VikingFindOnParametersService {
     }
 
     public List<Viking> getRedHairSortedByAge() {
-        return vikingService.findAll().stream().filter(v -> v.hairColor() == HairColor.Red).sorted(Comparator.comparingInt(Viking::age)).collect(Collectors.toList());
+        return vikingService.findAll().stream().filter(v -> v.hairColor() == HairColor.Red&&v.beardStyle()!=BeardStyle.CLEAN_SHAVEN).sorted(Comparator.comparingInt(Viking::age)).collect(Collectors.toList());
     }
 
     public Optional<Viking> getMaxId() {
@@ -85,9 +85,7 @@ public class VikingFindOnParametersService {
     }
     
     public long countWithOneOrTwoAxes() {
-        return vikingService.findAll().stream().filter(v -> {
-                    long axeCount = v.equipment().stream().filter(e -> e.name().equalsIgnoreCase("Axe")).count();
-                    return axeCount >= 1 && axeCount <= 2;
-                }).count();
+        return vikingService.findAll().stream().filter(v -> {long axeCount = v.equipment().stream().filter(e -> e.name().equalsIgnoreCase("Axe")).count();
+                    return axeCount >= 1 && axeCount <= 2;}).count();
     }
 }
