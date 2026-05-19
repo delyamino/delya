@@ -18,9 +18,9 @@ public class VikingFactory {
     private final Faker faker = new Faker(Locale.of("nor"));
     private final Random random = new Random();
 
-    public Viking createRandomViking() {
+    public Viking createRandomViking(int id) {
         return new Viking(
-                Math.abs(new Random().nextLong()),
+                id,
                 faker.name().firstName(),
                 18 + random.nextInt(43),
                 160 + random.nextInt(41),
@@ -31,7 +31,7 @@ public class VikingFactory {
     }
     
     public Viking createCustomViking(String name, int age, int height, HairColor hairColor, BeardStyle beardStyle, List<EquipmentItem> equipment) {
-        return new Viking (Math.abs(new Random().nextLong()), name, age, height, hairColor, beardStyle, equipment);
+        return new Viking (new Random().nextInt(), name, age, height, hairColor, beardStyle, equipment);
     }
 
     private List<EquipmentItem> createRandomEquipment() {

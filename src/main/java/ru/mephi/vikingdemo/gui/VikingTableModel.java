@@ -19,14 +19,14 @@ public class VikingTableModel extends AbstractTableModel {
         fireTableRowsInserted(row, row);
     }
     
-    public void removeViking (long id) {
+    public void removeViking (int id) {
         for (int i = 0; i < data.size(); i++) {
-        if (data.get(i).id().equals(id)) {
-            data.remove(i);
-            fireTableRowsDeleted(i, i);
-            return;
+            if (data.get(i).id()==id) {
+                data.remove(i);
+                fireTableRowsDeleted(i, i);
+                return;
+            }
         }
-    }
     }
 
     @Override
@@ -67,7 +67,7 @@ public class VikingTableModel extends AbstractTableModel {
     
     public void updateViking(Viking updated) {
         for (int i = 0; i < data.size(); i++) {
-            if (data.get(i).id().equals(updated.id())) {
+            if (data.get(i).id()==updated.id()) {
                 data.set(i, updated);
                 fireTableRowsUpdated(i, i);
                 return;

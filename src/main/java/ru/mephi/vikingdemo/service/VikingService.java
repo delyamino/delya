@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.mephi.vikingdemo.model.BeardStyle;
 import ru.mephi.vikingdemo.model.EquipmentItem;
@@ -15,7 +17,7 @@ import ru.mephi.vikingdemo.model.VikingNoId;
 
 @Service
 public class VikingService {
-    // каждый раз при изменении создаётся новая копия списка 
+    private final java.util.concurrent.atomic.AtomicInteger idCounter = new java.util.concurrent.atomic.AtomicInteger(0);
     private final CopyOnWriteArrayList<Viking> vikings = new CopyOnWriteArrayList<>();
     private final VikingFactory vikingFactory;
     @Autowired
@@ -28,16 +30,14 @@ public class VikingService {
     }
 
     public Viking createRandomViking() {
-        
-
-        Viking viking = vikingFactory.createRandomViking();
+        Viking viking = vikingFactory.createRandomViking(idCounter.incrementAndGet());
 
         vikings.add(viking);
         return viking;
     }
     public Viking createCustomViking(Viking viking) {
     Viking withId = new Viking(
-            Math.abs(new Random().nextLong()),
+            idCounter.incrementAndGet(),
             viking.name(),
             viking.age(),
             viking.heightCm(),
@@ -49,9 +49,9 @@ public class VikingService {
     return withId;
 }
     
-    public void deleteViking(long id) {
+    public void deleteViking(int id) {
         for (Viking v:vikings) {
-            if (v.id().equals(id)) {
+            if (v.id()==id) {
                 vikings.remove(v);
                 return;
             }
@@ -61,7 +61,7 @@ public class VikingService {
     public Viking updateViking(long id, VikingNoId updated) {
          for (int i = 0; i < vikings.size(); i++) {
             Viking v = vikings.get(i);
-            if (v.id().equals(id)) {
+            if (v.id()==id) {
                 vikings.remove(v);
                 String name;
                 Integer age;
@@ -113,10 +113,13 @@ public class VikingService {
                 }
                 Viking updatedViking = new Viking(v.id(), name, age, heightCm, hairColor, beardStyle, equipment);
                 vikings.set(i, updatedViking);
-                vikings.add(updatedViking);
                 return updatedViking;
             }
         }
         return null;
+    }
+    
+    public List<Viking> generateVikings(int count) {
+        return Stream.generate(() -> vikingFactory.createRandomViking(idCounter.incrementAndGet())).limit(count).peek(vikings::add).collect(Collectors.toList());
     }
 }

@@ -13,15 +13,20 @@ import javax.swing.SwingConstants;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.util.List;
+import javax.swing.JOptionPane;
+import ru.mephi.vikingdemo.service.VikingFindOnParametersService;
 
 
 public class VikingDesktopFrame extends JFrame {
 
     private final VikingService vikingService;
     private final VikingTableModel tableModel = new VikingTableModel();
+    private VikingFindOnParametersService fopService;
 
-    public VikingDesktopFrame(VikingService vikingService) {
+    public VikingDesktopFrame(VikingService vikingService, VikingFindOnParametersService fopService) {
         this.vikingService = vikingService;
+        this.fopService = fopService;
 
         setTitle("Viking Demo");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -40,8 +45,31 @@ public class VikingDesktopFrame extends JFrame {
         JButton createButton = new JButton("Create random viking");
         createButton.addActionListener(event -> onCreateViking());
 
+        JButton analyticsBtn = new JButton("Analytics");
+        
+
         JPanel bottomPanel = new JPanel();
         bottomPanel.add(createButton);
+        
+        
+        analyticsBtn.addActionListener(e -> {
+            VikingByParametersFrame analyticsFrame = new VikingByParametersFrame(fopService);
+            analyticsFrame.setVisible(true);
+        });
+        
+        JButton generateBtn = new JButton("Generate vikings");
+        generateBtn.addActionListener(e -> {
+            String input = JOptionPane.showInputDialog(this, "Сколько викингов сгенерировать?");
+            if (input != null && !input.isEmpty()) {
+                int count = Integer.parseInt(input);
+                List<Viking> generated = vikingService.generateVikings(count);
+                for (Viking v : generated) {
+                    tableModel.addViking(v);
+                }
+            }
+        });
+        bottomPanel.add(generateBtn);
+        bottomPanel.add(analyticsBtn);
         add(bottomPanel, BorderLayout.SOUTH);
     }
 
@@ -54,7 +82,7 @@ public class VikingDesktopFrame extends JFrame {
         tableModel.addViking(viking);
     }
     
-    public void removeViking(long id) {
+    public void removeViking(int id) {
         tableModel.removeViking(id);
     }
     

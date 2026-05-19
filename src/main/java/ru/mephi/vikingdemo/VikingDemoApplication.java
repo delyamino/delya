@@ -7,6 +7,7 @@ import ru.mephi.vikingdemo.gui.VikingDesktopFrame;
 
 import javax.swing.SwingUtilities;
 import ru.mephi.vikingdemo.controller.VikingListener;
+import ru.mephi.vikingdemo.service.VikingFindOnParametersService;
 import ru.mephi.vikingdemo.service.VikingService;
 
 @SpringBootApplication
@@ -18,11 +19,11 @@ public class VikingDemoApplication {
         app.setHeadless(false); // Для доступа к GUI
 
         ConfigurableApplicationContext context = app.run(args);
-
+        VikingFindOnParametersService fopService = context.getBean(VikingFindOnParametersService.class);
         VikingService vikingService = context.getBean(VikingService.class);
         VikingListener vikingListener = context.getBean(VikingListener.class);    
         SwingUtilities.invokeLater(() -> {
-            VikingDesktopFrame frame = new VikingDesktopFrame(vikingService);
+            VikingDesktopFrame frame = new VikingDesktopFrame(vikingService, fopService);
             vikingListener.setGui(frame);
             frame.setVisible(true);
         });

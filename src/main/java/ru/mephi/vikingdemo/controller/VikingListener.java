@@ -37,7 +37,7 @@ public class VikingListener {
         gui.addNewViking(service.createCustomViking(viking));
     }
     
-    void deleteViking(long id) {
+    void deleteViking(int id) {
         gui.removeViking(id);
         service.deleteViking(id);
     }
@@ -45,5 +45,9 @@ public class VikingListener {
     void updateViking(long id, VikingNoId updated) {
         Viking result = service.updateViking(id, updated);
         gui.updateViking(result);
+    }
+    
+    void testAdd(Viking viking) {
+        gui.addNewViking(viking);
     }
 }
