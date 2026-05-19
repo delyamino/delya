@@ -4,6 +4,7 @@
  */
 package ru.mephi.vikingdemo.service;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -76,16 +77,25 @@ public class VikingFindOnParametersService {
         return vikingService.findAll().stream().filter(v -> v.hairColor() == HairColor.Red&&v.beardStyle()!=BeardStyle.CLEAN_SHAVEN).sorted(Comparator.comparingInt(Viking::age)).collect(Collectors.toList());
     }
 
-    public Optional<Viking> getMaxId() {
-        return vikingService.findAll().stream().max(Comparator.comparingInt(Viking::id));
+    public Optional<Viking> getVikingWithMaxId() {
+        Integer[] ids = getIdsArray();
+        Arrays.sort(ids);
+        int maxId = ids[ids.length - 1];
+        return vikingService.findAll().stream().filter(v -> v.id() == maxId).findFirst();
     }
 
-    public List<Viking> getEvenIds() {
-        return vikingService.findAll().stream().filter(v -> v.id() % 2 == 0).collect(Collectors.toList());
+    public List<Viking> getVikingsWithEvenId() {
+        Integer[] ids = getIdsArray();
+        return Arrays.stream(ids).filter(id -> id % 2 == 0).map(id -> vikingService.findAll().stream().filter(v -> v.id() == id).findFirst().orElse(null))
+                .filter(v -> v != null).collect(Collectors.toList());
     }
     
     public long countWithOneOrTwoAxes() {
         return vikingService.findAll().stream().filter(v -> {long axeCount = v.equipment().stream().filter(e -> e.name().equalsIgnoreCase("Axe")).count();
                     return axeCount >= 1 && axeCount <= 2;}).count();
+    }
+
+    private Integer[] getIdsArray() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }
