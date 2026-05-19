@@ -77,14 +77,14 @@ public class VikingFindOnParametersService {
         return vikingService.findAll().stream().filter(v -> v.hairColor() == HairColor.Red&&v.beardStyle()!=BeardStyle.CLEAN_SHAVEN).sorted(Comparator.comparingInt(Viking::age)).collect(Collectors.toList());
     }
 
-    public Optional<Viking> getVikingWithMaxId() {
+    public Optional<Viking> getMaxId() {
         Integer[] ids = getIdsArray();
         Arrays.sort(ids);
         int maxId = ids[ids.length - 1];
         return vikingService.findAll().stream().filter(v -> v.id() == maxId).findFirst();
     }
 
-    public List<Viking> getVikingsWithEvenId() {
+    public List<Viking> getEvenIds() {
         Integer[] ids = getIdsArray();
         return Arrays.stream(ids).filter(id -> id % 2 == 0).map(id -> vikingService.findAll().stream().filter(v -> v.id() == id).findFirst().orElse(null))
                 .filter(v -> v != null).collect(Collectors.toList());
